@@ -1,5 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
+import smtplib
+
+ACCOUNT = "enter_your_email_accout_here"
+PASSWORD = "enter_your_password_here"
 
 URL = (
     "https://www.amazon.com/Stewarts-Cream-Soda-12oz-bottles"
@@ -16,24 +20,46 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36"
 }
 
-print(f"headers: {headers}")
-
-page = requests.get(URL_EBAY, headers=headers)
-
-# print(f"page: {page}")
+# print(f"headers: {headers}")
 
 
-html_content = BeautifulSoup(page.content, "html.parser")
+def check_price():
 
-# print(f"html_content: {html_content}")
-# print(f"html_content type: {type(html_content)}")
-# title = html_content.find(id="productTitle")
+    page = requests.get(URL_EBAY, headers=headers)
+    # print(f"page: {page}")
 
-title = html_content.find(id="itemTitle").get_text()
-price = html_content.find(id="prcIsum").get_text()
-converted_price = float(price[-5:])
+    html_content = BeautifulSoup(page.content, "html.parser")
+    # print(f"html_content: {html_content}")
+    # print(f"html_content type: {type(html_content)}")
+    # title = html_content.find(id="productTitle")
+
+    title = html_content.find(id="itemTitle").get_text()
+    price = html_content.find(id="prcIsum").get_text()
+    converted_price = float(price[-5:])
+
+    if converted_price < 100.0:
+        send_email()
+
+    # print(title.strip())
+    # print(converted_price)
 
 
-print(title.strip())
-print(converted_price)
+def send_email():
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.ehlo()
+    server.starttls()
+    server.ehlo()
 
+    server.login(ACCOUNT, PASSWORD)
+    subject = "Price fell down!"
+    body = "Check the eBay link " + URL_EBAY
+
+    msg = f"Subject: {subject}\n\n{body}"
+    server.sendmail(ACCOUNT, ACCOUNT, msg)
+
+    print("Email sent!")
+
+    server.quit()
+
+
+check_price()
