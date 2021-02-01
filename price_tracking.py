@@ -1,9 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
 import smtplib
+import time
+from datetime import datetime
 
-ACCOUNT = "enter_your_email_accout_here"
-PASSWORD = "enter_your_password_here"
+ACCOUNT = "Enter your email account here"
+PASSWORD = "Enter your password here"
 
 URL = (
     "https://www.amazon.com/Stewarts-Cream-Soda-12oz-bottles"
@@ -51,7 +53,9 @@ def send_email():
     server.ehlo()
 
     server.login(ACCOUNT, PASSWORD)
-    subject = "Price fell down!"
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+    subject = "[" + str(current_time) + "] Price fell down!"
     body = "Check the eBay link " + URL_EBAY
 
     msg = f"Subject: {subject}\n\n{body}"
@@ -61,5 +65,6 @@ def send_email():
 
     server.quit()
 
-
-check_price()
+while(True):
+    check_price()
+    time.sleep(60 * 60)
