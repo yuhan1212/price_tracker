@@ -1,6 +1,6 @@
 # eBay Price Tracking
 
-This program will automatically track choosen product price,\n 
+This program will automatically track choosen product price,<br/>
 and send an email to alert user when latest price meets the target price.
 
 ### Features
