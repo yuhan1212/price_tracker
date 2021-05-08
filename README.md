@@ -5,8 +5,9 @@ and send an email to alert user when the latest price meets the target price.
 
 ### Features
 
-* A web scraping project in Python 3.
-* Using BeautifulSoup and request library.
+* Scraped information from product page using BeautifulSoup and Requests libraries.
+* Created price converter function and time interval setting, automated price checking system.
+* Extracted pricing data and automatically sent customized notification email using smtplib module.
 
 ### Requirements
 
